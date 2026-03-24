@@ -107,7 +107,7 @@ def _fetch_adzuna(filters: dict) -> list[dict]:
     app_id  = os.getenv("ADZUNA_APP_ID", "")
     api_key = os.getenv("ADZUNA_API_KEY", "")
     if not app_id or not api_key:
-        raise RuntimeError("Set ADZUNA_APP_ID and ADZUNA_API_KEY in .env")
+        return _fetch_mock(filters) # Fallback to mock if keys missing
 
     params = {
         "app_id":   app_id,
@@ -117,30 +117,40 @@ def _fetch_adzuna(filters: dict) -> list[dict]:
         "where":    filters.get("location", "India"),
         "content-type": "application/json",
     }
-    resp = requests.get(
-        "https://api.adzuna.com/v1/api/jobs/in/search/1",
-        params=params, timeout=10
-    )
-    resp.raise_for_status()
-    raw = resp.json().get("results", [])
-
-    # Normalize to our schema
-    return [_normalize_adzuna(j) for j in raw]
-
+    try:
+        resp = requests.get(
+            "https://api.adzuna.com/v1/api/jobs/in/search/1",
+            params=params, timeout=10
+        )
+        resp.raise_for_status()
+        raw = resp.json().get("results", [])
+        return [_normalize_adzuna(j) for j in raw]
+    except Exception as e:
+        print(f"⚠️ Adzuna API failed: {e}. Falling back to mock data.")
+        return _fetch_mock(filters)
 
 def _normalize_adzuna(j: dict) -> dict:
+    # Safely handle salary ranges
+    s_min = j.get("salary_min")
+    s_max = j.get("salary_max")
+    salary_str = ""
+    if s_min and s_max:
+        salary_str = f"${s_min:,.0f} – ${s_max:,.0f}"
+    elif s_min:
+        salary_str = f"${s_min:,.0f}+"
+
     return {
-        "id":              j.get("id", ""),
-        "title":           j.get("title", ""),
-        "company":         j.get("company", {}).get("display_name", ""),
-        "location":        j.get("location", {}).get("display_name", ""),
-        "work_mode":       "remote" if "remote" in j.get("title", "").lower() else "onsite",
-        "salary":          f"${j['salary_min']:.0f} – ${j['salary_max']:.0f}" if j.get("salary_min") else "",
+        "id":              str(j.get("id") or ""),
+        "title":           j.get("title") or "",
+        "company":         (j.get("company") or {}).get("display_name") or "",
+        "location":        (j.get("location") or {}).get("display_name") or "",
+        "work_mode":       "remote" if "remote" in (j.get("title") or "").lower() else "onsite",
+        "salary":          salary_str,
         "required_skills": [],
-        "description":     j.get("description", ""),
-        "apply_url":       j.get("redirect_url", ""),
-        "category":        j.get("category", {}).get("label", ""),
-        "posted_date":     j.get("created", ""),
+        "description":     j.get("description") or "",
+        "apply_url":       j.get("redirect_url") or "",
+        "category":        (j.get("category") or {}).get("label") or "",
+        "posted_date":     j.get("created") or "",
     }
 
 
