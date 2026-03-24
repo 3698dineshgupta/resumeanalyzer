@@ -86,7 +86,7 @@ def remote():
 def all_jobs():
     user_id = get_jwt_identity()
     db      = get_db()
-    parsed  = _get_resume(db, user_id)
+    resume  = _get_resume(db, user_id)
 
     filters = {
         "query":    request.args.get("query", ""),
