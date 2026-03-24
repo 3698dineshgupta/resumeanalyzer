@@ -9,6 +9,11 @@ services:
     envVars:
       - key: PORT
         value: 5000
+      - key: FRONTEND_URL
+        fromService:
+          type: web
+          name: resume-analyzer-frontend
+          property: host
       - key: MONGO_URI
         sync: false
       - key: GROQ_API_KEY
@@ -25,7 +30,4 @@ services:
     rootDir: frontend
     envVars:
       - key: VITE_API_URL
-        fromService:
-          type: web
-          name: resume-analyzer-backend
-          property: host
+        value: https://resume-analyzer-backend.onrender.com/api

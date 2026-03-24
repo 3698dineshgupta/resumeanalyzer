@@ -20,12 +20,14 @@ git push origin main
 
 ## Step 3: Configure Environment Variables
 During the Blueprint setup, Render will ask you to fill in these required variables:
-- **MONGO_URI**: Your MongoDB connection string.
-- **GROQ_API_KEY**: Your Groq API key (starts with `gsk_`).
 
-## Step 4: Update Frontend URL (Optional)
-Once the backend is live, note its URL (e.g., `https://resume-analyzer-backend.onrender.com`). 
-If you encounter any API errors, ensure the **VITE_API_URL** secret in your Frontend service matches this URL.
+### **Backend Service (`resume-analyzer-backend`):**
+- **MONGO_URI**: Your MongoDB connection string (Atlas).
+- **GROQ_API_KEY**: Your Groq API key.
+- **FRONTEND_URL**: (Filled automatically by the Blueprint) — Ensure it points to your Frontend URL (e.g. `https://resume-analyzer-frontend.onrender.com`).
+
+### **Frontend Service (`resume-analyzer-frontend`):**
+- **VITE_API_URL**: Must be your Backend URL **WITH** `/api` suffix (e.g. `https://resume-analyzer-backend.onrender.com/api`).
 
 ## Step 5: Start Matching!
 Your app will be live at the **Frontend URL** provided by Render.
