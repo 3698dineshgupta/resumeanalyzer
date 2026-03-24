@@ -1,0 +1,13 @@
+flask
+flask-cors
+flask-jwt-extended
+pymongo
+python-dotenv
+pdfplumber
+PyPDF2
+python-docx
+scikit-learn
+bcrypt
+requests
+google-generativeai
+groq
