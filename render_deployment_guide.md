@@ -32,6 +32,22 @@ During the Blueprint setup, Render will ask you to fill in these required variab
 ## Step 5: Start Matching!
 Your app will be live at the **Frontend URL** provided by Render.
 
+## 🚨 Troubleshooting "Login Failed" on Render
+
+### **1. Fix CORS (Most Likely Issue)**
+Render's `FRONTEND_URL` must match your browser's origin exactly.
+1. In your **Backend** service dashboard -> **Environment**.
+2. **MANUALLY** set `FRONTEND_URL` to include `https://`:
+   - ✅ Correct: `https://resume-analyzer-frontend.onrender.com`
+   - ❌ Incorrect: `resume-analyzer-frontend.onrender.com`
+
+### **2. Fix MongoDB Network Access**
+MongoDB Atlas blocks unknown IP addresses by default. Since Render IPs change:
+1. Go to [MongoDB Atlas](https://cloud.mongodb.com).
+2. **Network Access** -> **+ Add IP Address**.
+3. Select **"Allow Access from Anywhere"** (this adds `0.0.0.0/0`).
+4. Click **Confirm**.
+
 ---
-> [!TIP]
-> **Free Tier Sleep**: Note that Render's free tier services "sleep" after 15 minutes of inactivity. The first request might take 30-60 seconds to wake up the backend.
+> [!IMPORTANT]
+> **Check Backend Logs**: If it still fails, look at the **Render Backend Logs**. If you see `DNS resolution failed` or `Connection timed out`, it means the MongoDB Atlas fix (Step 2 above) was not applied correctly.
