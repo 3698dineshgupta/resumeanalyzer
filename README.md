@@ -9,13 +9,13 @@ A full-stack web application that parses your resume, scores it using ATS metric
 | Feature | Description |
 |---|---|
 | 📄 Resume Parsing | Upload PDF/DOCX — extracts name, email, phone, skills, education, experience, projects |
-| 📊 ATS Scoring | Score out of 100 with improvement suggestions |
-| 💼 Job Matching | TF-IDF cosine similarity matching with match % per job |
-| 🗺️ Nearby Jobs | Filter by city or browser geolocation |
-| 🌍 Remote Jobs | Dedicated remote-only job feed |
-| 🤖 AI Assistant | Chat assistant powered by your resume + job data |
-| ✅ Apply Tracking | One-click apply with application history |
-| 🔖 Save Jobs | Bookmark jobs for later |
+| 📊 ATS Scoring | Deep weighted analysis with strengths/deductions (100-point scale) |
+| 🚀 Smart Matching | **Production-grade 4-stage pipeline**: Inference → Normalization → Weighted Scoring → Ranking |
+| 🤖 AI Assistant | Context-aware chat powered by **Llama 3.3 (70B)** with real-time resume + job data |
+| 🗺️ Nearby Jobs | Real-time filtering by city or browser geolocation |
+| 🌍 Remote Jobs | Dedicated remote-only job feed with specialized scoring |
+| ✅ Apply Tracking | One-click apply with deduplicated and clean application history |
+| 🔖 Save Jobs | Highly accurate bookmarks for personalized tracking |
 | 🔐 JWT Auth | Secure register/login with JWT tokens |
 
 ---
