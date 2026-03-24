@@ -24,11 +24,10 @@ def create_app():
 
     # ── Configuration ──────────────────────────────────────────────────────────
     app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY", "super-secret-change-me")
-    app.config["JWT_ACCESS_TOKEN_EXPIRES"] = False  # For demo; set timedelta in prod
-    app.config["MAX_CONTENT_LENGTH"] = 32 * 1024 * 1024  # 32 MB upload limit
+    app.config["JWT_ACCESS_TOKEN_EXPIRES"] = False
+    app.config["MAX_CONTENT_LENGTH"] = 32 * 1024 * 1024
     
     # ── Extensions ─────────────────────────────────────────────────────────────
-    # Be more permissive with origins to avoid local dev mismatch
     CORS(app, resources={r"/api/*": {
         "origins": [
             os.getenv("FRONTEND_URL", "http://localhost:5173"),
@@ -41,16 +40,15 @@ def create_app():
     init_db(app)
 
     # ── Blueprints ─────────────────────────────────────────────────────────────
-    app.register_blueprint(auth_bp,     url_prefix="/api/auth")
-    app.register_blueprint(resume_bp,   url_prefix="/api/resume")
-    app.register_blueprint(jobs_bp,     url_prefix="/api/jobs")
+    app.register_blueprint(auth_bp, url_prefix="/api/auth")
+    app.register_blueprint(resume_bp, url_prefix="/api/resume")
+    app.register_blueprint(jobs_bp, url_prefix="/api/jobs")
     app.register_blueprint(analysis_bp, url_prefix="/api/analysis")
-    app.register_blueprint(assistant_bp,url_prefix="/api/assistant")
+    app.register_blueprint(assistant_bp, url_prefix="/api/assistant")
 
     @app.errorhandler(Exception)
     def handle_exception(e):
         print(f"🔥 GLOBAL ERROR: {str(e)}")
-        # Log the full stack trace for better debugging
         import traceback
         traceback.print_exc()
         return {"error": "Internal server error"}, 500
@@ -61,7 +59,7 @@ def create_app():
 
     return app
 
+app = create_app()
 
 if __name__ == "__main__":
-    app = create_app()
-    app.run(debug=True, host="0.0.0.0", port=5000)
+    app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
