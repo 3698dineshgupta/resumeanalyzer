@@ -1,3 +1,4 @@
+dnspython
 gunicorn
 flask
 flask-cors
